@@ -1,0 +1,22 @@
+<% provide(:title, 'Edit') %>
+
+<div class= "panel-heading">
+	<h1>Update your profile</h1>
+</div>
+
+<div class="panel-body">
+	<%= form_for(@user) do |f| %>
+	<div class="jumbotron">
+		<%= render 'fields', f: f %>
+		<div class="form-group">
+		   <%= f.submit "Save changes", class: "btn btn-large btn-primary" %>
+		</div>
+	<% end %>
+		
+		  <%= gravatar_for @user %>
+    <a href="http://gravatar.com/emails">change</a>
+    <br>
+    <br>
+    <br>
+	</div>
+</div>
