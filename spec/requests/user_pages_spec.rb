@@ -48,7 +48,19 @@ describe "User pages" do
         end
 
         it {should_not have_link('delete', href: user_path(admin))}
+      
       end
+
+      describe "An admin user hacking to Delete himself" do
+        let(:admin) {FactoryGirl.create(:admin)}
+        before do
+          sign_in admin, no_capybara: true
+          delete user_path(admin)
+        end
+
+        specify {expect(admin.reload).to eq admin}
+      end
+      
     end
 
     it "should list each user" do
@@ -123,7 +135,7 @@ describe "User pages" do
     describe "page" do
       it {should have_content("Update your profile")}
       it {should have_title("Edit")}
-      it {should have_link("change", href: "http://gravatar.com/emails")}
+      it {should have_link("Edit Avatar", href: "http://gravatar.com/emails")}
     end
 
     describe 'with invalid information' do
@@ -150,6 +162,21 @@ describe "User pages" do
 
 
     end
+
+    describe "forbidden attributes" do
+      let(:params) do
+        {user: {admin:true, password: user.password, 
+                password_confirmation: user.password}}
+      end
+
+      before do
+        sign_in user, no_capybara: true
+        patch user_path(user), params
+      end
+      specify {expect(user.reload).not_to be_admin}
+    end
+
+
   end
 
 
